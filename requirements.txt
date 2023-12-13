@@ -8,3 +8,4 @@ opencv-python
 imgaug
 IPython[all]
 openai
+streamlit
