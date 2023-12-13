@@ -4,7 +4,9 @@ from PIL import Image
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from openai import OpenAI
+import base64
 
+open_api_key = "ENTER YOUR OPENAI API KEY HERE"
 
 def defmodel():
     from keras.models import Sequential
@@ -48,7 +50,7 @@ class_labels = np.load('target_labels.npy')
 
 
 # Set your OpenAI GPT-3 API key
-client = OpenAI(api_key="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")
+client = OpenAI(api_key=open_api_key)
 
 # Function to recognize ingredients from an image
 def recognize_ingredients(images):
@@ -75,7 +77,7 @@ def recognize_ingredients(images):
 # Function to generate recipe recommendations using ChatGPT
 def generate_recipe_recommendations(ingredients):
     # [Construct input_text and messages as before]
-    input_text = f"Generate recipe recommendations using these ingredients: {', '.join(ingredients)}"
+    input_text = f"Generate recipe recommendations using these ingredients and use icons for ingredients: {', '.join(ingredients)}"
 
     # Prepare the messages for the chat
     messages = [
@@ -100,8 +102,39 @@ def generate_recipe_recommendations(ingredients):
 
 
 # Streamlit app
-st.title("Recipe Chatbot")
 
+
+LOGO_IMAGE = r"icon1.png"
+
+st.markdown(
+    """
+    <style>
+    .container {
+        display: flex;
+    }
+    .logo-text {
+        font-weight:700 !important;
+        font-size:50px !important;
+        color: #f9a01b !important;
+        padding-top: 75px !important;
+    }
+    .logo-img {
+        float:right;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    f"""
+    <div class="container">
+        <img class="logo-img" src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+st.title("Recipe Chatbot")
 # Text input for ingredients
 text_input = st.text_input("Enter ingredients (comma-separated):")
 
